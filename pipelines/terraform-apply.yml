@@ -16,8 +16,6 @@ pipelines:
           fetch_materials: true
           keep_artifacts: false
           clean_workspace: false
-          approval:
-            type: manual
           jobs:
             deployment:
               timeout: 0
