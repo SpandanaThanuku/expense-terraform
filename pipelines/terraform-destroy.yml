@@ -1,0 +1,78 @@
+format_version: 10
+pipelines:
+  terraformDestroy:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      ansible:
+        git: https://github.com/SpandanaThanuku/expense-terraform
+        shallow_clone: false
+        auto_update: true
+        branch: main
+    stages:
+      - DEV:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          approval:
+            type: manual
+          jobs:
+            deployment:
+              timeout: 0
+              tasks:
+                - exec:
+                    command: terraform
+                    arguments: ["init", "-backend-config=env-dev/state.tfvars"]
+                - exec:
+                    command: terraform
+                    arguments: [ "destroy", "-var-file=env-dev/main.tfvars","-auto-approve" ]
+
+      - QA:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          approval:
+            type: manual
+            allow_only_on_success: true
+          jobs:
+            deployment:
+              timeout: 0
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - -l
+                      - -A
+      - UAT:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          approval:
+            type: manual
+            allow_only_on_success: true
+          jobs:
+            deployment:
+              timeout: 0
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - -l
+                      - -A
+      - PROD:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: false
+          approval:
+            type: manual
+          jobs:
+            deployment:
+              timeout: 0
+              tasks:
+                - exec:
+                    command: ls
+                    arguments:
+                      - -l
+                      - -A
