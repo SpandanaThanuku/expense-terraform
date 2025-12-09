@@ -13,7 +13,7 @@ resource "aws_subnet" "public" {
  availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
 
     tags = {
-      Name = "subnet-${count.index}"
+      Name = "public-subnet-${count.index+1}"
     }
 }
 
@@ -25,7 +25,7 @@ resource "aws_subnet" "private" {
   availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
 
   tags = {
-    Name = "subnet-${count.index}"
+    Name = "private-subnet-${count.index+1}"
   }
 }
 
