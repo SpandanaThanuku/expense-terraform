@@ -1,16 +1,18 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "5.54.1"
-    }
-  }
-}
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
 
   tags = {
     Name = "${var.env}-${var.project_name}-vpc"
+  }
+}
+
+resource "aws_vpc_peering_connection" "main" {
+  vpc_id        = aws_vpc.main.id
+  peer_vpc_id   = data.aws_vpc.default.id
+  auto_accept   = true
+
+  tags = {
+    Name = "${var.env}-vpc-with-default-vpc"
   }
 }
 
@@ -65,16 +67,6 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "private-subnet-${count.index+1}"
   }
-}
-
-resource "aws_vpc_peering_connection" "main" {
-  vpc_id        = aws_vpc.main.id
-  peer_vpc_id   = data.aws_vpc.default.id
-  auto_accept   = true
-
-    tags = {
-      Name = "${var.env}-vpc-with-default-vpc"
-    }
 }
 
 resource "aws_route" "main" {
