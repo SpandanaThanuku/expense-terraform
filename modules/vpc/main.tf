@@ -59,8 +59,10 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "main" {
+  count = length(var.public_subnets_cidr)
   domain = "vpc"
 }
+
 resource "aws_nat_gateway" "main" {
   count          = length(var.public_subnets_cidr)
   allocation_id = lookup(element(aws_eip.main,count.index), "id", null)
