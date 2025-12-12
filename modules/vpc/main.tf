@@ -109,9 +109,9 @@ resource "aws_route_table_association" "web" {
 }
 
 resource "aws_subnet" "app" {
-  count              = length(var.web_subnets_cidr)
+  count              = length(var.app_subnets_cidr)
   vpc_id             = aws_vpc.main.id
-  cidr_block         = element(var.web_subnets_cidr, count.index)
+  cidr_block         = element(var.app_subnets_cidr, count.index)
   availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
 
   tags = {
@@ -120,7 +120,7 @@ resource "aws_subnet" "app" {
 }
 
 resource "aws_route_table" "app" {
-  count = length(var.web_subnets_cidr)
+  count = length(var.app_subnets_cidr)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -144,9 +144,9 @@ resource "aws_route_table_association" "app" {
 }
 
 resource "aws_subnet" "db" {
-  count              = length(var.web_subnets_cidr)
+  count              = length(var.db_subnets_cidr)
   vpc_id             = aws_vpc.main.id
-  cidr_block         = element(var.web_subnets_cidr, count.index)
+  cidr_block         = element(var.db_subnets_cidr, count.index)
   availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
 
   tags = {
@@ -155,7 +155,7 @@ resource "aws_subnet" "db" {
 }
 
 resource "aws_route_table" "db" {
-  count = length(var.web_subnets_cidr)
+  count = length(var.db_subnets_cidr)
   vpc_id = aws_vpc.main.id
 
   route {
