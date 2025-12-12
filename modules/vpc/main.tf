@@ -73,19 +73,19 @@ resource "aws_nat_gateway" "main" {
   }
 }
 
-resource "aws_subnet" "private" {
-  count              = length(var.private_subnets_cidr)
+resource "aws_subnet" "web" {
+  count              = length(var.web_subnets_cidr)
   vpc_id             = aws_vpc.main.id
-  cidr_block         = element(var.private_subnets_cidr, count.index)
+  cidr_block         = element(var.web_subnets_cidr, count.index)
   availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
 
   tags = {
-    Name = "private-subnet-${count.index+1}"
+    Name = "web-subnet-${count.index+1}"
   }
 }
 
-resource "aws_route_table" "private" {
-  count = length(var.private_subnets_cidr)
+resource "aws_route_table" "web" {
+  count = length(var.web_subnets_cidr)
   vpc_id = aws_vpc.main.id
 
   route {
@@ -98,15 +98,86 @@ resource "aws_route_table" "private" {
     vpc_peering_connection_id = aws_vpc_peering_connection.main.id
   }
   tags = {
-    Name = "private-rt-${count.index+1}"
+    Name = "web-rt-${count.index+1}"
   }
 }
 
-resource "aws_route_table_association" "private" {
-  count          = length(var.private_subnets_cidr)
-  route_table_id = lookup(element(aws_route_table.private, count.index), "id", null)
-  subnet_id      = lookup(element(aws_subnet.private, count.index), "id", null)
+resource "aws_route_table_association" "web" {
+  count          = length(var.web_subnets_cidr)
+  route_table_id = lookup(element(aws_route_table.web, count.index), "id", null)
+  subnet_id      = lookup(element(aws_subnet.web, count.index), "id", null)
 }
+
+resource "aws_subnet" "app" {
+  count              = length(var.web_subnets_cidr)
+  vpc_id             = aws_vpc.main.id
+  cidr_block         = element(var.web_subnets_cidr, count.index)
+  availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
+
+  tags = {
+    Name = "app-subnet-${count.index+1}"
+  }
+}
+
+resource "aws_route_table" "app" {
+  count = length(var.web_subnets_cidr)
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = lookup(element(aws_nat_gateway.main, count.index), "id" ,null)
+  }
+
+  route {
+    cidr_block = data.aws_vpc.default.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.main.id
+  }
+  tags = {
+    Name = "app-rt-${count.index+1}"
+  }
+}
+
+resource "aws_route_table_association" "app" {
+  count          = length(var.app_subnets_cidr)
+  route_table_id = lookup(element(aws_route_table.app, count.index), "id", null)
+  subnet_id      = lookup(element(aws_subnet.app, count.index), "id", null)
+}
+
+resource "aws_subnet" "db" {
+  count              = length(var.web_subnets_cidr)
+  vpc_id             = aws_vpc.main.id
+  cidr_block         = element(var.web_subnets_cidr, count.index)
+  availability_zone  = element(var.az,count.index) # help to create zones as us-east-1a,1b
+
+  tags = {
+    Name = "db-subnet-${count.index+1}"
+  }
+}
+
+resource "aws_route_table" "db" {
+  count = length(var.web_subnets_cidr)
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = lookup(element(aws_nat_gateway.main, count.index), "id" ,null)
+  }
+
+  route {
+    cidr_block = data.aws_vpc.default.cidr_block
+    vpc_peering_connection_id = aws_vpc_peering_connection.main.id
+  }
+  tags = {
+    Name = "db-rt-${count.index+1}"
+  }
+}
+
+resource "aws_route_table_association" "db" {
+  count          = length(var.db_subnets_cidr)
+  route_table_id = lookup(element(aws_route_table.db, count.index), "id", null)
+  subnet_id      = lookup(element(aws_subnet.db, count.index), "id", null)
+}
+
 resource "aws_route" "main" {
   route_table_id            = aws_vpc.main.main_route_table_id
   destination_cidr_block    = data.aws_vpc.default.cidr_block
@@ -120,7 +191,7 @@ resource "aws_route" "default-vpc" {
 }
 
 ## EC2 instance testing purpose
-
+/*
 data "aws_ami" "example" {
   most_recent = true
   name_regex  = "Centos-8-DevOps-Practice"
@@ -148,6 +219,8 @@ resource "aws_security_group" "test" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
+
+
   tags = {
     Name = "allow_tls"
   }
@@ -160,4 +233,4 @@ resource "aws_instance" "example" {
   vpc_security_group_ids = [aws_security_group.test.id]
 }
 
-
+*/
