@@ -11,6 +11,7 @@ module "vpc" {
   project_name = var.project_name
 }
 
+/*
 module "rds" {
   source = "./modules/rds"
   for_each = var.rds
@@ -21,3 +22,5 @@ module "rds" {
   instance_class = lookup(each.value, "instance_class", null)
   family = lookup(each.value, "family", null)
 }
+
+ */
