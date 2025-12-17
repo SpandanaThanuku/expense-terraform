@@ -32,7 +32,6 @@ resource "aws_security_group" "main" {
   }
 }
 
-
 resource "aws_launch_template" "main" {
   name_prefix            = "${local.name}-lt"
   image_id               = data.aws_ami.centos8.image_id
