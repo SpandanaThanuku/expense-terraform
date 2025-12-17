@@ -28,7 +28,7 @@ module "rds" {
   project_name  = var.project_name
   kms_key_id    = var.kms_key_id
 
-  subnet_ids     = lookup(lookup(module.vpc, "main", null), "db_subnet_ids", null)
+  subnet_ids     = lookup(lookup(module.vpc, "main", null), "db_subnet_cidr", null)
   vpc_id         = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   sg_cidr_blocks = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
 }
