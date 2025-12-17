@@ -44,8 +44,8 @@ module "app" {
   instance_type       = var.backend_instance_type
   project_name        = var.project_name
   sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "web_subnets_cidr", null)
-  vpc_id              = module.vpc.vpc_id
-  vpc_zone_identifier = module.vpc.app_subnets_ids
+  vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
+  vpc_zone_identifier = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
 }
 
 
