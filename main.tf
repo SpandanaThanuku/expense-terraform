@@ -33,7 +33,7 @@ module "rds" {
   sg_cidr_blocks = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
 }
 
-module "app" {
+module "backend" {
   source = "./modules/app"
 
   app_port            = var.backend_app_port
@@ -43,9 +43,24 @@ module "app" {
   instance_capacity   = var.backend_instance_capacity
   instance_type       = var.backend_instance_type
   project_name        = var.project_name
-  sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
+  sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "web_subnets_cidr", null)
   vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
+}
+
+module "frontend" {
+  source = "./modules/app"
+
+  app_port            = var.frontend_app_port
+  bastion_cidrs       = var.bastion_cidrs
+  component           = "frontend"
+  env                 = var.env
+  instance_capacity   = var.frontend_instance_capacity
+  instance_type       = var.frontend_instance_type
+  project_name        = var.project_name
+  sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "web_subnets_cidr", null)
+  vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
+  vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "web_subnets_ids", null)
 }
 
 
