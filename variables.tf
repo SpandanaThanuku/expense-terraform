@@ -15,3 +15,5 @@ variable "frontend_instance_capacity" {}
 variable "frontend_instance_type" {}
 
 variable "acm_arn" {}
+variable "dns_name" {}
+variable "zone_id" {}
