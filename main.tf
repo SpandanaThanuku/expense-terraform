@@ -39,10 +39,12 @@ module "backend" {
   app_port            = var.backend_app_port
   bastion_cidrs       = var.bastion_cidrs
   component           = "backend"
-  env                 = var.env
   instance_capacity   = var.backend_instance_capacity
   instance_type       = var.backend_instance_type
+
+  env                 = var.env
   project_name        = var.project_name
+
   sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "web_subnets_cidr", null)
   vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
@@ -63,4 +65,31 @@ module "frontend" {
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "web_subnets_ids", null)
 }
 
+module "public-alb" {
+  source = "./modules/alb"
 
+  alb_name        = "public"
+  env             = var.env
+  project_name    = var.project_name
+  acm_arn         = var.acm_arn
+  internal        = false
+
+  sg_cidr_blocks  = ["0.0.0.0/0"]
+  subnets         = lookup(lookup((module.vpc, "main" ,null) ,"public_subnets_ids", null)
+  vpc_id          = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
+  target_group_arn = module.frontend.target_group_arn
+}
+
+module "private-alb" {
+  source = "./modules/alb"
+
+  alb_name        = "private"
+  env             = var.env
+  internal        = true
+  project_name    = var.project_name
+  acm_arn         = var.acm_arn
+  sg_cidr_blocks  = lookup(lookup(module.vpc, "main", null), "web_subnets_cidr", null)
+  subnets         = lookup(lookup((module.vpc, "main" ,null) ,"public_subnets_ids", null)
+  vpc_id          = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
+  target_group_arn = module.backend.target_group_arn
+}
