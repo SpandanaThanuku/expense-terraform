@@ -62,7 +62,7 @@ module "frontend" {
   project_name        = var.project_name
   sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "public_subnets_cidr", null)
   vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
-  vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "web_subnets_ids", null)
+  vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "public_subnets_ids", null)
 }
 
 module "public-alb" {
