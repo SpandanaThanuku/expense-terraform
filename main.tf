@@ -92,7 +92,7 @@ module "private-alb" {
   dns_name        = "backend"
   acm_arn         = var.acm_arn
   zone_id         = var.zone_id
-  sg_cidr_blocks  = lookup(lookup(module.vpc, "main", null), "web_subnets_cidr", null)
+  sg_cidr_blocks  = lookup(lookup(var.vpc, "main", null), "web_subnets_cidr", null)
   subnets         = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
   vpc_id          = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   target_group_arn = module.backend.target_group_arn
