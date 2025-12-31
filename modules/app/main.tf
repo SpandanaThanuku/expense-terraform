@@ -91,8 +91,8 @@ resource "aws_iam_role" "main" {
       },
     ]
   })
-}
-  inline_policy = {
+
+  inline_policy {
     name = "parameter-store"
 
     policy = jsonencode({
@@ -102,13 +102,13 @@ resource "aws_iam_role" "main" {
           "Sid" : "GetParameter",
           "Effect" : "Allow",
           "Action" : [
-
+            "kms:Decrypt",
             "ssm:GetParameterHistory",
             "ssm:GetParametersByPath",
             "ssm:GetParameters",
             "ssm:GetParameter"
           ],
-          "Resource" :"arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.${var.component}.*"
+          "Resource" :"arn:aws:ssm:us-east-1:348220191398:parameter/dev.expense.frontend.*"
         },
         {
           "Sid" : "DescribeAllParameters",
@@ -119,5 +119,6 @@ resource "aws_iam_role" "main" {
       ]
     })
   }
+}
 
 
