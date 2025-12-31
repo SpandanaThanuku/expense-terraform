@@ -38,9 +38,9 @@ resource "aws_launch_template" "main" {
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.main.id]
 
-  user_data              = base64encode(templatefile("${path.module}/userdata.sh", {
-    service_name  = var.component
-    env           = var.env
+  user_data = base64encode(templatefile("${path.module}/userdata.sh", {
+    service_name = var.component
+    env          = var.env
   }))
 
   iam_instance_profile {
@@ -117,7 +117,7 @@ resource "aws_iam_role" "main" {
             "ssm:GetParameters",
             "ssm:GetParameter"
           ],
-          "Resource" :"arn:aws:ssm:us-east-1:348220191398:parameter/dev.expense.frontend.*"
+          "Resource" :concat(["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.${var.component}.*"],var.parameters)
         },
         {
           "Sid" : "DescribeAllParameters",
