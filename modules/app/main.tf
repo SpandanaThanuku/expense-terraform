@@ -92,7 +92,7 @@ resource "aws_iam_role" "main" {
     ]
   })
 }
-  inline_policy {
+  inline_policy = {
     name = "parameter-store"
 
     policy = jsonencode({
