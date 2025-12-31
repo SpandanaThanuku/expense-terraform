@@ -117,7 +117,9 @@ resource "aws_iam_role" "main" {
             "ssm:GetParameters",
             "ssm:GetParameter"
           ],
-          "Resource" :concat(["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.${var.component}.*"],var.parameters)
+          "Resource" :concat([
+            "arn:aws:kms:us-east-1:348220191398:key/f77c9d15-c233-4524-897b-8eb4df496c4e",
+            "arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.${var.component}.*"],var.parameters)
         },
         {
           "Sid" : "DescribeAllParameters",
