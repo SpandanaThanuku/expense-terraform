@@ -33,7 +33,7 @@ module "rds" {
   sg_cidr_blocks = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
 }
 
-/*module "backend" {
+module "backend" {
   depends_on = [module.rds]
   source     = "./modules/app"
 
@@ -51,59 +51,9 @@ module "rds" {
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
   parameters          = ["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.rds.*"]
   kms                 = var.kms_key_id
-} */
-
-module "backend" {
-  depends_on = [module.rds]
-  source     = "./modules/app"
-
-  for_each            = var.backend
-  component           = "backend"
-
-  app_port            = lookup(each.value, "backend_app_port", null)
-  bastion_cidrs       = lookup(each.value, "bastion_cidrs", null)
-
-  instance_capacity   = lookup(each.value, "backend_instance_capacity", null)
-  instance_type       = lookup (each.value, "backend_instance_type", null)
-
-  env                 = var.env
-  project_name        = var.project_name
-  kms                 = var.kms_key_id
-
-  sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
-  vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
-  vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
-
-  parameters          = ["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.rds.*"]
-
 }
 
 module "frontend" {
-
-  source     = "./modules/app"
-
-  for_each            = var.frontend
-  component           = "frontend"
-
-  app_port            = lookup(each.value, "frontend_app_port", null)
-  bastion_cidrs       = lookup(each.value, "bastion_cidrs", null)
-
-  instance_capacity   = lookup(each.value, "frontend_instance_capacity", null)
-  instance_type       = lookup (each.value, "frontend_instance_type", null)
-
-  env                 = var.env
-  project_name        = var.project_name
-  kms                 = var.kms_key_id
-
-  sg_cidr_blocks      = lookup(lookup(var.vpc, "main", null), "app_subnets_cidr", null)
-  vpc_id              = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
-  vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
-
-  parameters          = ["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.rds.*"]
-
-}
-
-/*module "frontend" {
   source = "./modules/app"
 
   app_port            = var.frontend_app_port
@@ -119,7 +69,7 @@ module "frontend" {
   parameters          = []
   kms                 = var.kms_key_id
 
-} */
+}
 
 module "public-alb" {
   source = "./modules/alb"
