@@ -53,7 +53,7 @@ resource "aws_launch_template" "main" {
     ebs {
       volume_size             = 10
       encrypted               = true
-      kms_key_id              = var.kms
+      #kms_key_id              = var.kms
       delete_on_termination   = true
     }
   }
@@ -122,7 +122,7 @@ resource "aws_iam_role" "main" {
           "Sid" : "GetParameter",
           "Effect" : "Allow",
           "Action" : [
-            "kms:Decrypt",
+            #"kms:Decrypt",
             "ssm:GetParameterHistory",
             "ssm:GetParametersByPath",
             "ssm:GetParameters",
