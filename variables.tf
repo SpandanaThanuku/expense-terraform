@@ -18,5 +18,3 @@ variable "acm_arn" {}
 
 variable "zone_id" {}
 
-variable "backend" {}
-variable "frontend" {}
