@@ -17,3 +17,6 @@ variable "frontend_instance_type" {}
 variable "acm_arn" {}
 
 variable "zone_id" {}
+
+variable "backend" {}
+variable "frontend" {}

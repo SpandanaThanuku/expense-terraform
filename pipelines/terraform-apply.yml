@@ -25,7 +25,7 @@ pipelines:
                     arguments: ["init", "-backend-config=env-dev/state.tfvars"]
                 - exec:
                     command: terraform
-                    arguments: [ "apply", "-var-file=env-dev/main.tfvars","-auto-approve" ]
+                    arguments: [ "apply", "-var-file=env-dev/main.tfvars", "-auto-approve" ]
 
       - QA:
           fetch_materials: true
