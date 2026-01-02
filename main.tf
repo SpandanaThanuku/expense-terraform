@@ -136,6 +136,7 @@ module "public-alb" {
   subnets         = lookup(lookup(module.vpc, "main", null), "public_subnets_ids", null)
   vpc_id          = lookup(lookup(module.vpc, "main", null), "vpc_id", null)
   target_group_arn = module.frontend.target_group_arn
+  #target_group_arn = module.frontend.target_groups["target_group_name"].arn
 }
 
 module "private-alb" {
