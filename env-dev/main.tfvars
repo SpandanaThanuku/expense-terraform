@@ -28,17 +28,12 @@ rds = {
 }
 
 
-
-
-backend_app_port          = "8080"
-backend_instance_capacity = "1"
+backend_app_port          = 8080
+backend_instance_capacity = 1
 backend_instance_type     = "t3.small"
 
-
-
-
-frontend_app_port           = "80"
-frontend_instance_capacity  = "1"
+frontend_app_port           = 80
+frontend_instance_capacity  = 1
 frontend_instance_type      = "t3.small"
 
 

@@ -121,6 +121,7 @@ resource "aws_iam_role" "main" {
           "Sid" : "GetParameter",
           "Effect" : "Allow",
           "Action" : [
+            "kms:Encrypt",
             "kms:Decrypt",
             "ssm:GetParameterHistory",
             "ssm:GetParametersByPath",
@@ -146,4 +147,6 @@ resource "aws_iam_instance_profile" "main" {
   name = "${local.name}-role"
   role = aws_iam_role.main.name
 }
+
+
 
