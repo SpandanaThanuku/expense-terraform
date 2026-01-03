@@ -121,7 +121,7 @@ resource "aws_iam_role" "main" {
           "Sid" : "GetParameter",
           "Effect" : "Allow",
           "Action" : [
-            "kms:Encrypt",
+           # "kms:Encrypt",
             "kms:Decrypt",
             "ssm:GetParameterHistory",
             "ssm:GetParametersByPath",
