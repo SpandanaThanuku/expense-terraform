@@ -51,6 +51,8 @@ module "backend" {
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "app_subnets_ids", null)
   parameters          = ["arn:aws:ssm:us-east-1:348220191398:parameter/${var.env}.${var.project_name}.rds.*"]
   kms                 = var.kms_key_id
+  prometheus_cidrs    = var.prometheus_cidrs
+
 }
 
 module "frontend" {
@@ -68,7 +70,7 @@ module "frontend" {
   vpc_zone_identifier = lookup(lookup(module.vpc, "main", null), "web_subnets_ids", null)
   parameters          = []
   kms                 = var.kms_key_id
-
+  prometheus_cidrs    = var.prometheus_cidrs
 }
 
 module "public-alb" {

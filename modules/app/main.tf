@@ -12,6 +12,14 @@ resource "aws_security_group" "main" {
   }
 
   ingress {
+    from_port        = 9100
+    to_port          = 9100
+    protocol         = "tcp"
+    cidr_blocks      = var.prometheus_cidrs
+    description      = "PROMETHEUS"
+  }
+
+  ingress {
     from_port        = var.app_port # here port is 8080 also output port is also 8080 so remove conflict declaring it in variable
     to_port          = var.app_port
     protocol         = "tcp"
