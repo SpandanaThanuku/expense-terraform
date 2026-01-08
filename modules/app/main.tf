@@ -85,6 +85,12 @@ resource "aws_autoscaling_group" "main" {
     value               = local.name
     propagate_at_launch = true
   }
+
+  tag {
+    key                 = "Monitor"
+    value               = "yes"
+    propagate_at_launch = true
+  }
 }
 
 resource "aws_lb_target_group" "main" {
